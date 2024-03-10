@@ -1,4 +1,5 @@
-[//]: # (This file is only used by the `npm run docs command` to generate the README.md file. Do not edit README.md directly.)
+[//]: # (docs/readme.template.md is only used by the `npm run docs command` to generate the README.md file. Do not edit README.md directly.)
+[//]: # (All changes should be made to docs/readme.template.md; the README.md file is regenerated each commit.)
 
 # Phaselock Design Documentation
 
@@ -10,7 +11,7 @@ Phaselock is an online multiplayer party game where players try to read each oth
 
 ## Game Flow
 
-![diagram](./readme-1.svg)
+![diagram](./README-1.svg)
 
 ## Technical Overview
 
@@ -35,19 +36,19 @@ Phaselock is an online multiplayer party game where players try to read each oth
 
 This app utilizes Next.js's API routes with a Socket.io server for real-time game state updates. The server is responsible for managing game sessions, handling client connections, and broadcasting game state changes. TypeScript is used to ensure type safety and a unified development experience across the stack.
 
-![diagram](./readme-2.svg)
+![diagram](./README-2.svg)
 
 #### Game Session Management
 
 Handles creation, joining, and management of game sessions. Tracks players, teams, and game state.
 
-![diagram](./readme-3.svg)
+![diagram](./README-3.svg)
 
 #### Player Management
 
 Tracks player states, roles (operator, guessers), and turns.
 
-![diagram](./readme-4.svg)
+![diagram](./README-4.svg)
 
 #### Game State Management
 
@@ -65,17 +66,17 @@ Manages the current spectrum, target, clues, guesses, and scoring.
 
 ## Data Model ERD
 
-![diagram](./readme-5.svg)
+![diagram](./README-5.svg)
 
 ## Class Diagram
 
-![diagram](./readme-6.svg)
+![diagram](./README-6.svg)
 
 ## Development Roadmap
 
 ### Phase 1: MVP
 
-- [] WebSocket connection between clients and server.
+- [x] WebSocket connection between clients and server.
 - [] Game creation and joining (including game ID generation)
 - [] Team setup
 - [] Game start conditions
@@ -88,7 +89,13 @@ Manages the current spectrum, target, clues, guesses, and scoring.
 - [] Game end conditions
 - [] Winner announcement
 
-### Stretch Goals
+### Phase 2: Polish
+
+- [] Refine visual design (retro/neubrutalism aesthetic)
+- [] Add sound effects and background music
+- [] Add animations and transitions with Framer Motion
+
+### Phase 3: Advanced Features
 
 - [] Re-roll generated spectrum if the operator doesn't like it
 - [] Custom spectrum list option in game creation

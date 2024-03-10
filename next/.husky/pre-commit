@@ -1,9 +1,13 @@
 cd next
-echo
+
 echo Linting files...
-echo
 npm run lint
 echo
 echo Formatting files...
+npm run format
 echo
-
+echo Generating docs...
+npm run docs
+echo
+echo Pre-commit checks complete!
+echo

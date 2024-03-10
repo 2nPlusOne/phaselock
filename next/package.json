@@ -6,7 +6,7 @@
     "dev": "tsx server.ts",
     "build": "next build",
     "start": "NODE_ENV=production node dist/server.js",
-    "docs": "mmdc -i ../docs/readme.template.md -o ../readme.md -b transparent",
+    "docs": "mmdc -i ../docs/readme.template.md -o ../README.md -b transparent",
     "lint": "next lint ",
     "format": "prettier --write .",
     "prepare": "husky install next/.husky"
