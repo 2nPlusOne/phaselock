@@ -1,0 +1,49 @@
+classDiagram
+    class GameSession {
+        +String sessionId
+        +List players
+        +Map teams
+        +GameState gameState
+        +void startGame()
+        +void endGame()
+        +void broadcastState()
+    }
+    class Player {
+        +String playerId
+        +String name
+        +Team team
+        +Role role
+        +void sendClue(String clue)
+        +void makeGuess(int guess)
+    }
+    class Team {
+        +String teamId
+        +List players
+        +int score
+        +void addPlayer(Player player)
+        +void removePlayer(String playerId)
+    }
+    class GameState {
+        +Spectrum spectrum
+        +Target target
+        +String clue
+        +int guess
+        +void calculateScore()
+    }
+    class Spectrum {
+        +String spectrumId
+        +String description
+        +String leftEndpoint
+        +String rightEndpoint
+        +int rangeStart
+        +int rangeEnd
+    }
+    class Target {
+        +int position
+    }
+    GameSession -- "*" Player : contains
+    GameSession -- "*" Team : groups
+    Team -- "*" Player : includes
+    GameSession -- GameState : tracks
+    GameState -- Spectrum : uses
+    GameState -- Target : defines

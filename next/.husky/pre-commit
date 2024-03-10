@@ -1,0 +1,9 @@
+cd next
+echo
+echo Linting files...
+echo
+npm run lint
+echo
+echo Formatting files...
+echo
+
