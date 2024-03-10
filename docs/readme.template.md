@@ -260,26 +260,26 @@ classDiagram
 ### Phase 1: MVP
 
 - [x] WebSocket connection between clients and server.
-- [] Game creation and joining (including game ID generation)
-- [] Team setup
-- [] Game start conditions
-- [] Score tracking
-- [] Random spectrum generation w/o repeats
-- [] Random target generation
-- [] Clue submission and broadcast
-- [] Guess submission and scoring
-- [] Round management
-- [] Game end conditions
-- [] Winner announcement
+- [ ] Game creation and joining (including game ID generation)
+- [ ] Team setup
+- [ ] Game start conditions
+- [ ] Score tracking
+- [ ] Random spectrum generation w/o repeats
+- [ ] Random target generation
+- [ ] Clue submission and broadcast
+- [ ] Guess submission and scoring
+- [ ] Round management
+- [ ] Game end conditions
+- [ ] Winner announcement
 
 ### Phase 2: Polish
 
-- [] Refine visual design (retro/neubrutalism aesthetic)
-- [] Add sound effects and background music
-- [] Add animations and transitions with Framer Motion
+- [ ] Refine visual design (retro/neubrutalism aesthetic)
+- [ ] Add sound effects and background music
+- [ ] Add animations and transitions with Framer Motion
 
 ### Phase 3: Advanced Features
 
-- [] Re-roll generated spectrum if the operator doesn't like it
-- [] Custom spectrum list option in game creation
-- [] Spectator mode
+- [ ] Re-roll generated spectrum if the operator doesn't like it
+- [ ] Custom spectrum list option in game creation
+- [ ] Spectator mode
