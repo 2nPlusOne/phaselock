@@ -1,5 +1,5 @@
-[//]: # (docs/readme.template.md is only used by the `npm run docs command` to generate the README.md file. Do not edit README.md directly.)
-[//]: # (All changes should be made to docs/readme.template.md; the README.md file is regenerated each commit.)
+[//]: # "docs/readme.template.md is only used by the `npm run docs command` to generate the README.md file. Do not edit README.md directly."
+[//]: # "All changes should be made to docs/readme.template.md; the README.md file is regenerated each commit."
 
 # Phaselock Design Documentation
 
@@ -7,7 +7,7 @@
 
 ## Game Overview
 
-Phaselock is an online multiplayer party game where players try to read each other's minds. The game is divided into teams, and each turn, one player (the "operator") receives a prompt with two opposite/related sides of a spectrum, and a secret pre-selected position within that spectrum (the "target"). The operator gives a clue (a single concept or idea) which aims to guide their team to the target position on the spectrum. The closer the team's guess to the target, the more points they score.
+Phaselock is an online multiplayer party game where players try to read each other's minds. The game is divided into teams, and each turn, one player (the "psychic") receives a prompt with two opposite/related sides of a spectrum, and a secret pre-selected position within that spectrum (the "target"). The psychic gives a clue (a single concept or idea) which aims to guide their team to the target position on the spectrum. The closer the team's guess to the target, the more points they score.
 
 ## Game Flow
 
@@ -29,7 +29,7 @@ Phaselock is an online multiplayer party game where players try to read each oth
 
 - Game Lobby: For creating, joining games, and setting up teams.
 - Spectrum Display: Visually represents the spectrum and the team's guess.
-- Clue Submission: Input for the operator to submit their clue.
+- Clue Submission: Input for the psychic to submit their clue.
 - Guess Mechanism: Interface for the team to submit their guess on the spectrum.
 
 ### Backend Architecture
@@ -46,7 +46,7 @@ Handles creation, joining, and management of game sessions. Tracks players, team
 
 #### Player Management
 
-Tracks player states, roles (operator, guessers), and turns.
+Tracks player states, roles (psychic, guessers), and turns.
 
 ![diagram](./README-4.svg)
 
@@ -97,6 +97,6 @@ Manages the current spectrum, target, clues, guesses, and scoring.
 
 ### Phase 3: Advanced Features
 
-- [ ] Re-roll generated spectrum if the operator doesn't like it
+- [ ] Re-roll generated spectrum if the psychic doesn't like it
 - [ ] Custom spectrum list option in game creation
 - [ ] Spectator mode

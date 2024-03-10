@@ -1,5 +1,5 @@
-[//]: # (docs/readme.template.md is only used by the `npm run docs command` to generate the README.md file. Do not edit README.md directly.)
-[//]: # (All changes should be made to docs/readme.template.md; the README.md file is regenerated each commit.)
+[//]: # "docs/readme.template.md is only used by the `npm run docs command` to generate the README.md file. Do not edit README.md directly."
+[//]: # "All changes should be made to docs/readme.template.md; the README.md file is regenerated each commit."
 
 # Phaselock Design Documentation
 
@@ -7,7 +7,7 @@
 
 ## Game Overview
 
-Phaselock is an online multiplayer party game where players try to read each other's minds. The game is divided into teams, and each turn, one player (the "operator") receives a prompt with two opposite/related sides of a spectrum, and a secret pre-selected position within that spectrum (the "target"). The operator gives a clue (a single concept or idea) which aims to guide their team to the target position on the spectrum. The closer the team's guess to the target, the more points they score.
+Phaselock is an online multiplayer party game where players try to read each other's minds. The game is divided into teams, and each turn, one player (the "psychic") receives a prompt with two opposite/related sides of a spectrum, and a secret pre-selected position within that spectrum (the "target"). The psychic gives a clue (a single concept or idea) which aims to guide their team to the target position on the spectrum. The closer the team's guess to the target, the more points they score.
 
 ## Game Flow
 
@@ -17,7 +17,7 @@ flowchart TD
     B --> C[Enter Game Lobby]
     C --> D[Gameplay Begins]
     D --> E{Player Role?}
-    E -- Operator --> F(Receive Spectrum & Target)
+    E -- Psychic --> F(Receive Spectrum & Target)
     E -- Guesser --> G(Wait for Clue)
     F --> H(Submit Clue)
     G --> H
@@ -50,7 +50,7 @@ flowchart TD
 
 - Game Lobby: For creating, joining games, and setting up teams.
 - Spectrum Display: Visually represents the spectrum and the team's guess.
-- Clue Submission: Input for the operator to submit their clue.
+- Clue Submission: Input for the psychic to submit their clue.
 - Guess Mechanism: Interface for the team to submit their guess on the spectrum.
 
 ### Backend Architecture
@@ -82,7 +82,7 @@ graph TD
 
 #### Player Management
 
-Tracks player states, roles (operator, guessers), and turns.
+Tracks player states, roles (psychic, guessers), and turns.
 
 ```mermaid
 graph TD
@@ -170,89 +170,80 @@ erDiagram
 ```mermaid
 classDiagram
     class GameSession {
-        -id: string
-        -players: Player[]
-        -teams: Team[]
-        -state: GameState
-        -spectrum: Spectrum
-        -target: Target
-        -clues: Clue[]
-        -guesses: Guess[]
-        -scores: Score[]
-        +addPlayer()
-        +removePlayer()
-        +startGame()
-        +endGame()
-        +updateState()
-        +broadcastState()
+        +String sessionId
+        +List players
+        +Map teams
+        +GameState gameState
+        +void startGame()
+        +void endGame()
+        +void broadcastState()
     }
     class Player {
-        -id: string
-        -name: string
-        -role: Role
-        -score: number
-        +submitClue()
-        +submitGuess()
+        +String playerId
+        +String name
+        +Team team
+        +Role role
+        +void sendClue(String clue)
+        +void makeGuess(int guess)
     }
     class Team {
-        -id: string
-        -players: Player[]
-        -score: number
-        +addPlayer()
-        +removePlayer()
-        +updateScore()
+        +String teamId
+        +List players
+        +int score
+        +void addPlayer(Player player)
+        +void removePlayer(String playerId)
     }
     class GameState {
-        -round: number
-        -turn: Role
-        -phase: Phase
-        -winner: Team
-        +nextTurn()
-        +nextPhase()
-        +endGame()
+        +Spectrum spectrum
+        +Target target
+        +List clues
+        +List guesses
+        +List scores
+        +void generateSpectrum()
+        +void defineTarget()
+        +void submitClue(String clue)
+        +void makeGuess(int guess)
+        +void calculateScore()
+    }
+    class Turn {
+        +Spectrum spectrum
+        +Target target
+        +String clue
+        +int guess
+        +void calculateScore()
     }
     class Spectrum {
-        -id: string
-        -left: string
-        -right: string
-        -position: number
-        +generate()
-    }
-    class Target {
-        -position: number
-        +generate()
+        +String spectrumId
+        +String description
+        +String leftEndpoint
+        +String rightEndpoint
+        +int rangeStart
+        +int rangeEnd
     }
     class Clue {
-        -id: string
-        -text: string
-        -player: Player
+        +String clueId
+        +String text
+        +Player player
     }
     class Guess {
-        -id: string
-        -position: number
-        -player: Player
+        +int guessId
+        +int position
+        +Team team
     }
     class Score {
-        -id: string
-        -team: Team
-        -points: number
+        +int scoreId
+        +int points
+        +Team team
     }
-    class Role {
-        -name: string
-    }
-    class Phase {
-        -name: string
-    }
-    GameSession --> Player
-    GameSession --> Team
-    GameSession --> GameState
-    GameSession --> Spectrum
-    GameSession --> Target
-    GameSession --> Clue
-    GameSession --> Guess
-    GameSession --> Score
-    GameState --> Role
-    GameState --> Phase
+    GameSession o-- "*" Player : contains
+    GameSession o-- "*" Team : groups
+    Team o-- "*" Player : includes
+    GameSession --> GameState : tracks
+    GameState --> Spectrum : generates
+    GameState --> Target : defines
+    Player --> Clue : submits
+    Player --> Guess : makes
+    Player --> Score : earns
 ```
 
 ## Development Roadmap
@@ -280,6 +271,6 @@ classDiagram
 
 ### Phase 3: Advanced Features
 
-- [ ] Re-roll generated spectrum if the operator doesn't like it
+- [ ] Re-roll generated spectrum if the psychic doesn't like it
 - [ ] Custom spectrum list option in game creation
 - [ ] Spectator mode
