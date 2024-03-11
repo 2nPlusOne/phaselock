@@ -17,9 +17,9 @@ const Lobby: React.FC<LobbyProps> = ({ roomId }) => {
 
   return (
     <>
-      <div className="flex flex-col justify-center p-4">
-        <div className="mb-4 flex items-center justify-center gap-4">
-          <h2 className="text-2xl">Room ID: {roomId.slice(0, 4)}</h2>
+      <div className="flex flex-col items-center p-4">
+        <div className="flex items-center justify-center gap-4">
+          <h1 className="text-2xl">Room ID: {roomId.slice(0, 4)}</h1>
           <button
             onClick={handleCopy}
             className="rounded bg-blue-500 px-4 py-2 text-white"

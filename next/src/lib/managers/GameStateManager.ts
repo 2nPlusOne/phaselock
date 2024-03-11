@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 
 // GameStateManager.ts
-export class GameStateManager {
+export default class GameStateManager {
   constructor(private io: Server) {
     io.on("connection", (socket) => {
       console.log("GameStateManager: A user connected");

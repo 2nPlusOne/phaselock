@@ -4,10 +4,9 @@ import express from "express";
 import next from "next";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { PlayerManager } from "./lib/managers/PlayerManager";
-import { GameStateManager } from "./lib/managers/GameStateManager";
 import { Events } from "./lib/events";
 import RoomManager from "./lib/managers/RoomManager";
+import GameStateManager from "./lib/managers/GameStateManager";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const isDevMode = process.env.NODE_ENV !== "production";
@@ -21,7 +20,6 @@ app.prepare().then(() => {
   const io = new Server(httpServer);
 
   new RoomManager(io);
-  new PlayerManager(io);
   new GameStateManager(io);
 
   server.all("*", (req, res) => {
