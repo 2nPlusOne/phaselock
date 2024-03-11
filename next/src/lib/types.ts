@@ -1,11 +1,13 @@
 export type Spectrum = [string, string];
 
-export interface GameSession {
-  gameSessionId: string;
+export interface Room {
+  roomId: string;
+  owner: Player;
+  players: Player[];
   gameState: GameState;
 }
 
-export enum RoundPhase {
+export enum GamePhase {
   SetupGame,
   PickTeams,
   GiveClue,
@@ -26,26 +28,17 @@ export enum TeamStatus {
   None,
 }
 
-export type TeamNames = {
-  [key in TeamStatus]: string;
-};
-
-export type Players = {
-  [playerId: string]: Player;
-};
-
 export interface GameState {
-  teamNames: TeamNames;
-  roundPhase: RoundPhase;
+  gamePhase: GamePhase;
   roundNumber: number;
-  players: Players;
-  psychic: Player;
-  spectrum: Spectrum;
+  psychic: Player | null;
+  spectrum: Spectrum | null;
   target: number;
   clue: string;
   guess: number;
   scores: {
-    [team in TeamStatus]: number;
+    [TeamStatus.LeftBrain]: number;
+    [TeamStatus.RightBrain]: number;
   };
   previousTurns: TurnSummary[];
 }
@@ -61,4 +54,5 @@ export interface TurnSummary {
 export enum Role {
   Psychic,
   Guesser,
+  None,
 }

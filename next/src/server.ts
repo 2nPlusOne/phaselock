@@ -4,9 +4,10 @@ import express from "express";
 import next from "next";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { GameSessionManager } from "./lib/managers/GameSessionManager";
 import { PlayerManager } from "./lib/managers/PlayerManager";
 import { GameStateManager } from "./lib/managers/GameStateManager";
+import { Events } from "./lib/events";
+import RoomManager from "./lib/managers/RoomManager";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const isDevMode = process.env.NODE_ENV !== "production";
@@ -19,24 +20,9 @@ app.prepare().then(() => {
   const httpServer = createServer(server);
   const io = new Server(httpServer);
 
-  new GameSessionManager(io);
+  new RoomManager(io);
   new PlayerManager(io);
   new GameStateManager(io);
-
-  io.on("connection", (socket) => {
-    console.log("A user connected");
-
-    // Listen for 'input-change' event from the client
-    socket.on("input-change", (input) => {
-      console.log(`Input received: ${input}`);
-      // You can emit back to the client or broadcast here
-      socket.emit("update-input", input); // Echo back the input to the client
-    });
-
-    socket.on("disconnect", () => {
-      console.log("User disconnected");
-    });
-  });
 
   server.all("*", (req, res) => {
     return handle(req, res);

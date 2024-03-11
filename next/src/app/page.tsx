@@ -1,9 +1,9 @@
-import WebSocketTest from "@/components/WebSocketTest";
+import MainMenu from "@/components/MainMenu";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <WebSocketTest />
+    <main>
+      <MainMenu />
     </main>
   );
 }
