@@ -1,29 +1,36 @@
 "use client";
 
 import { navigate } from "@/actions";
-import useSocket, { OnEvents } from "@/hooks/useSocket";
+import useSocket from "@/hooks/useSocket";
 import { Events } from "@/lib/events";
+import GameLobby from "@/components/GameLobby";
 import React, { useState } from "react";
-
-const onEvents: OnEvents = {
-  [Events.ROOM_CREATED]: (roomId: string) => {
-    console.log(`Room ${roomId} created`);
-    navigate(roomId.slice(0, 4));
-  },
-  [Events.ROOM_JOINED]: (roomId: string) => {
-    console.log(`Joined room ${roomId}`);
-  },
-  [Events.DISCONNECT]: () => {
-    console.log("User disconnected");
-  },
-};
 
 type Props = { roomId?: string };
 export default function EnterName({ roomId }: Props): React.ReactNode {
-  const socket = useSocket(onEvents);
+  const [joined, setJoined] = useState(false);
   const [name, setName] = useState("");
   const [buttonDisabled, setButtonsDisabled] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const socket = useSocket({
+    [Events.ROOM_CREATED]: (newRoomId: string) => {
+      console.log(`Room ${newRoomId} created`);
+      navigate(newRoomId.slice(0, 4));
+    },
+    [Events.ROOM_JOINED]: (joinedRoomId: string) => {
+      console.log(`Joined room ${joinedRoomId}`);
+      if (joinedRoomId) {
+        setJoined(true);
+      } else {
+        setErrorMessage("Room not found");
+        setButtonsDisabled(false);
+      }
+    },
+    [Events.DISCONNECT]: () => {
+      console.log("User disconnected");
+    },
+  });
 
   const handleCreateRoom = () => {
     setButtonsDisabled(true);
@@ -45,6 +52,10 @@ export default function EnterName({ roomId }: Props): React.ReactNode {
       setErrorMessage("Name must be at least 3 characters long");
     }
   };
+
+  if (joined && roomId) {
+    return <GameLobby socket={socket} roomId={roomId} playerName={name} />;
+  }
 
   return (
     <>

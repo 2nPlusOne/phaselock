@@ -18,6 +18,10 @@ export default class RoomManager {
       socket.on(Events.JOIN_ROOM, (roomId: string, name: string) =>
         this.handleJoinRoom(socket, roomId, name),
       );
+      socket.on(Events.CHAT_MESSAGE, (roomId: string, name: string, msg: string) =>
+        this.handleChatMessage(roomId, name, msg),
+      );
+      socket.on(Events.DISCONNECT, () => this.handleDisconnect(socket));
     });
   }
 
@@ -40,7 +44,12 @@ export default class RoomManager {
       players: ownerName ? [owner] : [],
       gameState: getInitialGameState(),
     });
-    socket.join(roomId);
+    if (ownerName) {
+      socket.data.roomId = roomId;
+      socket.data.name = ownerName;
+      socket.join(roomId);
+      this.broadcastPlayers(roomId);
+    }
     socket.emit(Events.ROOM_CREATED, roomId);
   };
 
@@ -69,6 +78,33 @@ export default class RoomManager {
     };
     room.players.push(player);
     socket.join(roomId);
+    socket.data.roomId = roomId;
+    socket.data.name = playerName;
     socket.emit(Events.ROOM_JOINED, roomId);
+    this.broadcastPlayers(roomId);
+  };
+
+  private handleChatMessage = (
+    roomId: string,
+    name: string,
+    message: string,
+  ) => {
+    this.io.to(roomId).emit(Events.CHAT_MESSAGE, { name, message });
+  };
+
+  private handleDisconnect = (socket: Socket) => {
+    const { roomId, name } = socket.data as { roomId?: string; name?: string };
+    if (!roomId || !name) return;
+    const room = this.rooms.get(roomId);
+    if (!room) return;
+    room.players = room.players.filter((p) => p.name !== name);
+    this.broadcastPlayers(roomId);
+  };
+
+  private broadcastPlayers = (roomId: string) => {
+    const room = this.rooms.get(roomId);
+    if (!room) return;
+    this.io.to(roomId).emit(Events.PLAYERS_UPDATE, room.players);
   };
 }
+

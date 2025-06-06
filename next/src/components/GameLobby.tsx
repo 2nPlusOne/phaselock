@@ -1,15 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import copy from "copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Socket } from "socket.io-client";
+import { Events } from "@/lib/events";
+import { ChatMessage, Player } from "@/lib/types";
+import PlayerList from "./PlayerList";
+import Chat from "./Chat";
 
 interface LobbyProps {
   roomId: string;
+  socket: Socket;
+  playerName: string;
 }
 
-const Lobby: React.FC<LobbyProps> = ({ roomId }) => {
+const Lobby: React.FC<LobbyProps> = ({ roomId, socket, playerName }) => {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  useEffect(() => {
+    const handlePlayers = (pls: Player[]) => setPlayers(pls);
+    const handleMessage = (msg: ChatMessage) =>
+      setMessages((m) => [...m, msg]);
+
+    socket.on(Events.PLAYERS_UPDATE, handlePlayers);
+    socket.on(Events.CHAT_MESSAGE, handleMessage);
+
+    return () => {
+      socket.off(Events.PLAYERS_UPDATE, handlePlayers);
+      socket.off(Events.CHAT_MESSAGE, handleMessage);
+    };
+  }, [socket]);
   const handleCopy = () => {
     copy("localhost:3000/" + roomId.slice(0, 4));
     toast("Copied to clipboard!");
@@ -27,6 +50,8 @@ const Lobby: React.FC<LobbyProps> = ({ roomId }) => {
             Copy Invite Link
           </button>
         </div>
+        <PlayerList players={players} />
+        <Chat socket={socket} roomId={roomId} playerName={playerName} messages={messages} />
       </div>
       <ToastContainer />
     </>

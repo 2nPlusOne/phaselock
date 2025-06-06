@@ -20,4 +20,10 @@ export enum Events {
 
   /** Event fired when the server confirms a user joined a room. */
   ROOM_JOINED = "room-joined",
+
+  /** Event fired when the list of players in a room changes. */
+  PLAYERS_UPDATE = "players-update",
+
+  /** Event fired to transmit chat messages. */
+  CHAT_MESSAGE = "chat-message",
 }
