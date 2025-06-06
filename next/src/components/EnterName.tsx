@@ -13,24 +13,29 @@ export default function EnterName({ roomId }: Props): React.ReactNode {
   const [buttonDisabled, setButtonsDisabled] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const socket = useSocket({
-    [Events.ROOM_CREATED]: (newRoomId: string) => {
-      console.log(`Room ${newRoomId} created`);
-      navigate(newRoomId.slice(0, 4));
-    },
-    [Events.ROOM_JOINED]: (joinedRoomId: string) => {
-      console.log(`Joined room ${joinedRoomId}`);
-      if (joinedRoomId) {
-        setJoined(true);
-      } else {
-        setErrorMessage("Room not found");
-        setButtonsDisabled(false);
-      }
-    },
-    [Events.DISCONNECT]: () => {
-      console.log("User disconnected");
-    },
-  });
+  const socket = useSocket(
+    React.useMemo(
+      () => ({
+        [Events.ROOM_CREATED]: (newRoomId: string) => {
+          console.log(`Room ${newRoomId} created`);
+          navigate(newRoomId.slice(0, 4));
+        },
+        [Events.ROOM_JOINED]: (joinedRoomId: string) => {
+          console.log(`Joined room ${joinedRoomId}`);
+          if (joinedRoomId) {
+            setJoined(true);
+          } else {
+            setErrorMessage("Room not found");
+            setButtonsDisabled(false);
+          }
+        },
+        [Events.DISCONNECT]: () => {
+          console.log("User disconnected");
+        },
+      }),
+      [],
+    ),
+  );
 
   const handleCreateRoom = () => {
     setButtonsDisabled(true);
