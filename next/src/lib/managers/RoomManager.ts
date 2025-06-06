@@ -12,8 +12,12 @@ export default class RoomManager {
 
   constructor(private io: Server) {
     io.on(Events.CONNECTION, (socket) => {
-      socket.on(Events.CREATE_ROOM, this.handleCreateRoom);
-      socket.on(Events.JOIN_ROOM, this.handleJoinRoom);
+      socket.on(Events.CREATE_ROOM, (name?: string) =>
+        this.handleCreateRoom(socket, name),
+      );
+      socket.on(Events.JOIN_ROOM, (roomId: string, name: string) =>
+        this.handleJoinRoom(socket, roomId, name),
+      );
     });
   }
 
@@ -23,10 +27,7 @@ export default class RoomManager {
    * @param ownerName - The name of the room owner.
    * @param callback - A callback function that will be called with the generated roomId.
    */
-  private handleCreateRoom = (
-    ownerName: string,
-    callback: (roomId: string) => void,
-  ) => {
+  private handleCreateRoom = (socket: Socket, ownerName = "") => {
     const roomId = generateRoomId();
     const owner: Player = {
       name: ownerName,
@@ -36,10 +37,11 @@ export default class RoomManager {
     this.rooms.set(roomId, {
       roomId,
       owner,
-      players: [owner],
+      players: ownerName ? [owner] : [],
       gameState: getInitialGameState(),
     });
-    callback(roomId);
+    socket.join(roomId);
+    socket.emit(Events.ROOM_CREATED, roomId);
   };
 
   /**
@@ -50,21 +52,23 @@ export default class RoomManager {
    * @param callback - A callback function that will be called with a boolean indicating the success of the operation.
    */
   private handleJoinRoom = (
+    socket: Socket,
     roomId: string,
     playerName: string,
-    callback: (success: boolean) => void,
   ) => {
     const room = this.rooms.get(roomId);
-    if (room) {
-      const player: Player = {
-        name: playerName,
-        team: TeamStatus.None,
-        role: Role.None,
-      };
-      room.players.push(player);
-      callback(true);
-    } else {
-      callback(false);
+    if (!room) {
+      socket.emit(Events.ROOM_JOINED, "");
+      return;
     }
+
+    const player: Player = {
+      name: playerName,
+      team: TeamStatus.None,
+      role: Role.None,
+    };
+    room.players.push(player);
+    socket.join(roomId);
+    socket.emit(Events.ROOM_JOINED, roomId);
   };
 }

@@ -17,4 +17,7 @@ export enum Events {
 
   /** Event fired when a user joins a room. */
   JOIN_ROOM = "join-room",
+
+  /** Event fired when the server confirms a user joined a room. */
+  ROOM_JOINED = "room-joined",
 }

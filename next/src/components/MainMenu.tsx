@@ -27,7 +27,7 @@ const MainMenu: React.FC = () => {
   };
 
   const handleJoinRoom = () => {
-    socket.emit(Events.JOIN_ROOM, roomName);
+    navigate(roomName);
   };
 
   return (

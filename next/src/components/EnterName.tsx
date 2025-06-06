@@ -10,6 +10,9 @@ const onEvents: OnEvents = {
     console.log(`Room ${roomId} created`);
     navigate(roomId.slice(0, 4));
   },
+  [Events.ROOM_JOINED]: (roomId: string) => {
+    console.log(`Joined room ${roomId}`);
+  },
   [Events.DISCONNECT]: () => {
     console.log("User disconnected");
   },
@@ -28,7 +31,8 @@ export default function EnterName({ roomId }: Props): React.ReactNode {
   };
 
   const handleJoinRoom = () => {
-    socket.emit("join-room", name);
+    if (!roomId) return;
+    socket.emit(Events.JOIN_ROOM, roomId, name);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
