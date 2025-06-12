@@ -7,28 +7,30 @@ export type OnEvents = {
 
 // takes a map of onEvents that map strings to functions
 const useSocket = (onEvents?: OnEvents) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [socket] = useState<Socket>(() => io());
 
   useEffect(() => {
-    const newSocket = io();
-    setSocket(newSocket);
-
-    if (onEvents) {
-      for (const [event, handler] of Object.entries(onEvents)) {
-        // check type of event and handler
-        if (typeof event !== "string" || typeof handler !== "function") {
-          throw new Error("Invalid event or handler");
-        }
-        newSocket.on(event, handler);
+    if (!onEvents) return;
+    for (const [event, handler] of Object.entries(onEvents)) {
+      if (typeof event !== "string" || typeof handler !== "function") {
+        throw new Error("Invalid event or handler");
       }
+      socket.on(event, handler);
     }
-
     return () => {
-      newSocket.disconnect();
+      for (const [event, handler] of Object.entries(onEvents)) {
+        socket.off(event, handler);
+      }
     };
-  }, [onEvents]);
+  }, [socket, onEvents]);
 
-  return socket as Socket;
+  useEffect(() => {
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
+
+  return socket;
 };
 
 export default useSocket;

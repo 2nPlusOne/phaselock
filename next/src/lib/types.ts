@@ -85,3 +85,11 @@ export enum Role {
   Guesser,
   None,
 }
+
+/** Represents a chat message. */
+export interface ChatMessage {
+  /** Name of the player sending the message. */
+  name: string;
+  /** The message text. */
+  message: string;
+}
